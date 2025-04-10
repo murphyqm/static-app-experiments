@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plotly Map with Multiple Toggleable Layers</title>
+    <style>
+        /* Style for the map container */
+        #map-container {
+            width: 100%;
+            height: 500px;
+        }
+
+        /* Style for the toggle buttons */
+        .toggleButton {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Interactive Map with Multiple Toggleable Layers</h1>
+    
+    <!-- Buttons for toggling each layer -->
+    <div id="toggleLayer1Button" class="toggleButton">Hide Cities Layer</div>
+    <div id="toggleLayer2Button" class="toggleButton">Hide Airports Layer</div>
+    
+    <div id="map-container"></div>
+
+    <!-- Include Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <script>
+        // Create the map layout and layers in JavaScript
+        var trace1 = {
+            type: 'scattermapbox',
+            lat: [40.7128, 34.0522],  // New York and Los Angeles
+            lon: [-74.0060, -118.2437],
+            mode: 'markers',
+            marker: { size: 14, color: 'red' },
+            name: "Cities"
+        };
+
+        var trace2 = {
+            type: 'scattermapbox',
+            lat: [51.5074, 48.8566],  // London and Paris (example airports)
+            lon: [-0.1278, 2.3522],
+            mode: 'markers',
+            marker: { size: 14, color: 'blue' },
+            name: "Airports"
+        };
+
+        var data = [trace1, trace2];
+
+        var layout = {
+            mapbox: {
+                style: "open-street-map",
+                center: { lat: 39.8283, lon: -98.5795 },  // Center of US
+                zoom: 3
+            },
+            title: "Interactive Map with Toggleable Layers"
+        };
+
+        // Plot the map
+        Plotly.newPlot('map-container', data, layout);
+
+        // Toggle functionality for Layer 1 (Cities)
+        let layer1Visible = true;
+        const toggleLayer1Btn = document.getElementById('toggleLayer1Button');
+        toggleLayer1Btn.addEventListener('click', function () {
+            const update = {
+                visible: layer1Visible ? false : true
+            };
+
+            // Update the visibility of Layer 1
+            Plotly.update('map-container', { visible: update.visible }, [0]);
+
+            // Update button text based on visibility state
+            toggleLayer1Btn.textContent = layer1Visible ? "Show Cities Layer" : "Hide Cities Layer";
+            
+            // Toggle the visibility state
+            layer1Visible = !layer1Visible;
+        });
+
+        // Toggle functionality for Layer 2 (Airports)
+        let layer2Visible = true;
+        const toggleLayer2Btn = document.getElementById('toggleLayer2Button');
+        toggleLayer2Btn.addEventListener('click', function () {
+            const update = {
+                visible: layer2Visible ? false : true
+            };
+
+            // Update the visibility of Layer 2
+            Plotly.update('map-container', { visible: update.visible }, [1]);
+
+            // Update button text based on visibility state
+            toggleLayer2Btn.textContent = layer2Visible ? "Show Airports Layer" : "Hide Airports Layer";
+
+            // Toggle the visibility state
+            layer2Visible = !layer2Visible;
+        });
+    </script>
+
+</body>
+</html>

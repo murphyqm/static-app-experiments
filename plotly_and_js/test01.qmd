@@ -1,0 +1,113 @@
+---
+title: "Plotly Map with Layer Toggle"
+format: html
+---
+
+This is an experiment to combine plotly maps, but moving
+the interactivity to a JS layer. In this, the map is saved out as html and
+then embedded; will also test rendering it directly.
+
+```{python}
+import plotly.graph_objects as go
+import plotly.express as px
+
+# Create a basic scattermapbox map
+fig = go.Figure(go.Scattermapbox(
+    lat=[40.7128, 34.0522],
+    lon=[-74.0060, -118.2437],
+    mode='markers',
+    marker=dict(size=14, color='red'),
+    name="Cities"
+))
+
+# Set up the map layout with the Mapbox style
+fig.update_layout(
+    mapbox=dict(
+        style="open-street-map",
+        center=dict(lat=39.8283, lon=-98.5795),
+        zoom=3
+    ),
+    title="Interactive Map with Toggleable Layers"
+)
+
+# Save the figure as HTML to embed into the final document
+fig.write_html("map.html")
+```
+
+```{javascript}
+document.addEventListener('DOMContentLoaded', function () {
+    const toggleBtn = document.getElementById('toggleLayerButton');
+    const mapContainer = document.getElementById('map-container');
+
+    let layerVisible = true;
+
+    toggleBtn.addEventListener('click', function () {
+        if (layerVisible) {
+            // Hide the layer
+            mapContainer.layout.mapbox.layers[0].visible = false;
+            toggleBtn.textContent = "Show Layer";
+        } else {
+            // Show the layer
+            mapContainer.layout.mapbox.layers[0].visible = true;
+            toggleBtn.textContent = "Hide Layer";
+        }
+        layerVisible = !layerVisible;
+    });
+});
+```
+
+```{html}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plotly Map with Toggle Layers</title>
+    <style>
+        /* CSS styling for the map and button */
+        #map-container {
+            width: 100%;
+            height: 500px;
+        }
+        #toggleLayerButton {
+            margin: 20px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="toggleLayerButton">Hide Layer</div>
+    <div id="map-container"></div>
+
+    <!-- Embed Plotly map HTML -->
+    <div id="plotly-map">
+        <iframe src="map.html" width="100%" height="500px"></iframe>
+    </div>
+
+    <!-- JavaScript for layer toggle -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('toggleLayerButton');
+            const mapContainer = document.getElementById('map-container');
+
+            let layerVisible = true;
+
+            toggleBtn.addEventListener('click', function () {
+                if (layerVisible) {
+                    // Hide the layer
+                    mapContainer.layout.mapbox.layers[0].visible = false;
+                    toggleBtn.textContent = "Show Layer";
+                } else {
+                    // Show the layer
+                    mapContainer.layout.mapbox.layers[0].visible = true;
+                    toggleBtn.textContent = "Hide Layer";
+                }
+                layerVisible = !layerVisible;
+            });
+        });
+    </script>
+</body>
+</html>
+```

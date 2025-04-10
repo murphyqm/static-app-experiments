@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plotly Map with Multiple Toggleable Layers</title>
+    <script src="https://cdn.plot.ly/plotly-4.14.3.min.js"></script>  <!-- Use stable version -->
+    <style>
+        /* Style for the map container */
+        #map-container {
+            width: 100%;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Interactive Map with Scatter and Choropleth Layers</h1>
+    <div id="map-container"></div>
+
+    <script>
+        // Define Scatter Map (e.g., cities)
+        var trace1 = {
+            type: 'scattermapbox',
+            lat: [40.7128, 34.0522, 41.8781],  // Example latitudes (New York, LA, Chicago)
+            lon: [-74.0060, -118.2437, -87.6298],  // Example longitudes
+            mode: 'markers',
+            marker: { size: 14, color: 'red' },
+            name: "Cities",
+            visible: true  // Initially visible
+        };
+
+        // Define Choropleth Map (e.g., US states with some data)
+        var trace2 = {
+            type: 'choroplethmapbox',
+            geojson: "https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json",  // Example GeoJSON for counties
+            locations: ["06", "36", "48", "12"],  // Example FIPS codes for California, New York, Texas, and Florida
+            z: [30, 25, 18, 28],  // Example values for each state
+            colorbar: { title: 'Population Density' },
+            colorscale: 'Viridis',
+            name: "State Data",
+            visible: true  // Initially visible
+        };
+
+        var data = [trace1, trace2];
+
+        // Mapbox access token (you can use your Mapbox token here)
+        var mapboxAccessToken = 'your-mapbox-access-token';  // Replace with your Mapbox access token
+
+        // Define layout for the map
+        var layout = {
+            title: "Interactive Map with Toggleable Layers",
+            mapbox: {
+                style: 'open-street-map',  // You can use other styles or Mapbox styles
+                center: { lat: 39.8283, lon: -98.5795 },
+                zoom: 3,
+                accessToken: mapboxAccessToken  // Set the Mapbox token
+            },
+            updatemenus: [
+                {
+                    buttons: [
+                        {
+                            args: [{'visible': [true, false]}],  // Show only the cities layer (trace1)
+                            label: 'Show Cities Layer',
+                            method: 'relayout'
+                        },
+                        {
+                            args: [{'visible': [false, true]}],  // Show only the choropleth layer (trace2)
+                            label: 'Show Choropleth Layer',
+                            method: 'relayout'
+                        },
+                        {
+                            args: [{'visible': [true, true]}],  // Show both layers
+                            label: 'Show Both Layers',
+                            method: 'relayout'
+                        }
+                    ],
+                    direction: 'down',
+                    showactive: true,
+                    x: 0.17,
+                    xanchor: 'left',
+                    y: 1.15,
+                    yanchor: 'top'
+                }
+            ]
+        };
+
+        // Create the plot
+        Plotly.newPlot('map-container', data, layout);
+    </script>
+
+</body>
+</html>

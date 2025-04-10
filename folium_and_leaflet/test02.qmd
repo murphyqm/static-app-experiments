@@ -1,0 +1,87 @@
+---
+title: "Basic example dashboard"
+---
+
+This is a very simple prototype dashboard. Mouse around the map below, and use the layers menu (top right hand corner of the map)
+to view different map layers and resources, which can be toggled.
+
+
+Trying to change colourmap:
+
+```{python}
+#| echo: false
+
+import folium
+import geopandas as gpd
+from IPython.display import display, HTML
+from folium.plugins import HeatMap
+from folium.plugins import MarkerCluster, FastMarkerCluster
+import matplotlib.pyplot as plt
+import numpy as np
+import branca.colormap as cm
+
+z_min = 1
+z_max = 10
+cmap = cm.linear.plasma
+
+# Create a map centered around Ireland
+map_ireland = folium.Map(location=[51.6223, -8.889], zoom_start=15, tiles=None)  # Clonakilty
+folium.TileLayer('cartodbpositron', name='Minimal', control=True).add_to(map_ireland)
+
+gradient_dict = {}
+
+
+
+# Get the index values and colors from the plasma colormap
+for ind_val, c in zip(cmap.index, cmap.colors):
+    r, g, b, a = c
+    gradient_dict[str(ind_val)] = f"rgba({r * 255},{g * 255},{b * 255},{a})"  # RGBA to 255 scale
+
+
+geojson_file = 'https://raw.githubusercontent.com/FrancescaPontin/Park_Safety/refs/heads/main/data/parkrun_locations.geojson'
+
+gdf = gpd.read_file(geojson_file)
+
+heatmap_layer = gdf[["latitude","longitude"]].copy()
+HeatMap(heatmap_layer,
+        name = 'Parkrun heatmap',
+        gradient=gradient_dict,).add_to(map_ireland)
+
+
+marker_cluster = MarkerCluster(name = 'Parkrun events').add_to(map_ireland)
+
+# Iterate over your GeoDataFrame (or data) to add markers to the cluster
+for idx, row in gdf.iterrows():
+    # Get coordinates for the marker
+    lat, lon = row["latitude"], row["longitude"]
+    
+    # Calculate the color based on the index (or any other metric, like number of markers in a cluster)
+    # marker_color = cmap(idx / len(gdf))  # Get a color from the colormap based on index
+    marker_color = "green"
+    
+    """
+    # Create the CircleMarker with the selected color and add the tooltip/popup
+    folium.CircleMarker(
+        location=[lat, lon],
+        radius=10,  # radius in pixels, not meters
+        weight=0,
+        fill=True,
+        fill_color=marker_color,
+        fill_opacity=0.8,
+        tooltip=folium.GeoJsonTooltip(fields=["EventLongName", "countrycode"]),
+        popup=folium.GeoJsonPopup(fields=["EventLongName", "countrycode"]),
+    ).add_to(marker_cluster)
+    """
+    marker = folium.Marker(
+        location=[lat, lon],
+        icon=folium.Icon(color="darkpurple"),
+        popup=f"Event: {row['EventLongName']}<br>Country: {row['countrycode']}",
+    )
+    marker.add_to(marker_cluster)
+
+# Add Layer Control to toggle between layers
+folium.LayerControl().add_to(map_ireland)
+
+map_ireland
+
+```

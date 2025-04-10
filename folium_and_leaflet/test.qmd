@@ -1,0 +1,143 @@
+---
+title: "Basic example dashboard"
+---
+
+This is a very simple prototype dashboard. Mouse around the map below, and use the layers menu (top right hand corner of the map)
+to view different map layers and resources, which can be toggled.
+
+
+## Interactive map
+```{python}
+#| echo: false
+
+import folium
+import geopandas as gpd
+from IPython.display import display, HTML
+from folium.plugins import HeatMap
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.colors as mcolors
+
+# Create a colormap from matplotlib (e.g., 'viridis')
+cmap = plt.get_cmap('viridis')
+
+# Create a map centered around Ireland
+map_ireland = folium.Map(location=[51.6223, -8.889], zoom_start=15, tiles=None)  # Clonakilty
+folium.TileLayer('openstreetmap', name='Traditional', control=True).add_to(map_ireland)
+folium.TileLayer(
+        tiles = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        attr = 'Esri',
+        name = 'Esri Satellite',
+        overlay = False,
+        control = True
+       ).add_to(map_ireland)
+folium.TileLayer('cartodbpositron', name='Minimal', control=True).add_to(map_ireland)
+
+
+geojson_file = 'https://raw.githubusercontent.com/FrancescaPontin/Park_Safety/refs/heads/main/data/parkrun_locations.geojson'
+
+gdf = gpd.read_file(geojson_file)
+
+folium.GeoJson(
+    gdf,
+    name="Park Runs",
+    marker=folium.CircleMarker(radius = 10, # Radius in metres
+                                           weight = 0, #outline weight
+                                           fill_color = '#000000', 
+                                           fill_opacity = 0.8),
+    tooltip=folium.GeoJsonTooltip(fields=["EventLongName", "countrycode"]),
+    popup=folium.GeoJsonPopup(fields=["EventLongName", "countrycode"]),
+    zoom_on_click=True,
+).add_to(map_ireland)
+
+heatmap_layer = gdf[["latitude","longitude"]].copy()
+heatmap_layer["value"] = 1
+HeatMap(heatmap_layer, name = 'Parkrun heatmap', ).add_to(map_ireland)
+
+# Add Layer Control to toggle between layers
+folium.LayerControl().add_to(map_ireland)
+
+map_ireland
+
+```
+
+
+Trying to change colourmap:
+
+```{python}
+#| echo: false
+
+import folium
+import geopandas as gpd
+from IPython.display import display, HTML
+from folium.plugins import HeatMap
+from folium.plugins import MarkerCluster, FastMarkerCluster
+import matplotlib.pyplot as plt
+import numpy as np
+import branca.colormap as cm
+
+z_min = 1
+z_max = 10
+cmap = cm.linear.plasma
+
+# Create a map centered around Ireland
+map_ireland = folium.Map(location=[51.6223, -8.889], zoom_start=15, tiles=None)  # Clonakilty
+folium.TileLayer('openstreetmap', name='Traditional', control=True).add_to(map_ireland)
+folium.TileLayer(
+        tiles = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        attr = 'Esri',
+        name = 'Esri Satellite',
+        overlay = False,
+        control = True
+       ).add_to(map_ireland)
+folium.TileLayer('cartodbpositron', name='Minimal', control=True).add_to(map_ireland)
+
+
+
+gradient_dict = {}
+
+"""
+for ind_val, c in zip(cmap.index, cmap.colors):
+    # Create gradient dictionary for heatmap on the fly
+    r, g, b, a = c
+    gradient_dict[str(ind_val)]  = f"rgba({r},{g},{b},{a})"
+"""
+
+# Get the index values and colors from the plasma colormap
+for ind_val, c in zip(cmap.index, cmap.colors):
+    r, g, b, a = c
+    gradient_dict[str(ind_val)] = f"rgba({r * 255},{g * 255},{b * 255},{a})"  # RGBA to 255 scale
+
+print(gradient_dict)
+
+geojson_file = 'https://raw.githubusercontent.com/FrancescaPontin/Park_Safety/refs/heads/main/data/parkrun_locations.geojson'
+
+gdf = gpd.read_file(geojson_file)
+
+folium.GeoJson(
+    gdf,
+    name="Park Runs",
+    marker=folium.CircleMarker(radius = 10, # Radius in metres
+                                           weight = 0, #outline weight
+                                           fill_color = '#000000', 
+                                           fill_opacity = 0.8),
+    tooltip=folium.GeoJsonTooltip(fields=["EventLongName", "countrycode"]),
+    popup=folium.GeoJsonPopup(fields=["EventLongName", "countrycode"]),
+    zoom_on_click=True,
+).add_to(map_ireland)
+
+heatmap_layer = gdf[["latitude","longitude"]].copy()
+HeatMap(heatmap_layer,
+        name = 'Parkrun heatmap',
+        gradient=gradient_dict,).add_to(map_ireland)
+
+
+FastMarkerCluster(data=heatmap_layer).add_to(map_ireland)
+
+
+# Add Layer Control to toggle between layers
+folium.LayerControl().add_to(map_ireland)
+
+map_ireland
+
+```

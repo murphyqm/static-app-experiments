@@ -1,0 +1,44 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [-74.2591, 40.4774],
+              [-73.7004, 40.4774],
+              [-73.7004, 40.9176],
+              [-74.2591, 40.9176],
+              [-74.2591, 40.4774]
+            ]
+          ]
+        },
+        "properties": {
+          "name": "Brooklyn",
+          "population": 2500000
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [-73.9352, 40.4774],
+              [-73.6176, 40.4774],
+              [-73.6176, 40.9176],
+              [-73.9352, 40.9176],
+              [-73.9352, 40.4774]
+            ]
+          ]
+        },
+        "properties": {
+          "name": "Queens",
+          "population": 2300000
+        }
+      }
+    ]
+  }
+  

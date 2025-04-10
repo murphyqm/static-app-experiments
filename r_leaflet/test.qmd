@@ -1,0 +1,108 @@
+---
+title: "Interactive Map Dashboard"
+format: html
+editor: visual
+---
+
+```{r setup, include=FALSE}
+# Load necessary libraries
+library(leaflet)
+library(geojsonio)
+library(htmltools)
+```
+
+```{r}
+# Load GeoJSON files
+cities <- geojsonio::geojson_read("cities.geojson", what = "sp")
+regions <- geojsonio::geojson_read("regions.geojson", what = "sp")
+
+# Create the base leaflet map
+m <- leaflet() %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  setView(lng = -98.5795, lat = 39.8283, zoom = 4)
+
+# Add cities as points to the map
+m <- m %>% addGeoJSON(data = cities, layerId = "cities")
+
+# Add regions as polygons to the map
+m <- m %>% addGeoJSON(data = regions, layerId = "regions")
+
+# Enable the toggle functionality
+m
+```
+
+
+<script src="https://unpkg.com/maplibre-gl@2.5.0/dist/maplibre-gl.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@2.5.0/dist/maplibre-gl.css" />
+
+<div id="map" style="width: 100%; height: 500px;"></div>
+
+<script>
+  // Create a MapLibre map instance
+  const map = new maplibregl.Map({
+    container: 'map', // The map container
+    style: 'https://demotiles.maplibre.org/style.json', // Map style (you can use custom styles)
+    center: [-98.5795, 39.8283], // Center coordinates
+    zoom: 4 // Initial zoom level
+  });
+
+  // Add the points layer (cities)
+  map.on('load', () => {
+    map.addSource('cities', {
+      'type': 'geojson',
+      'data': 'cities.geojson'  // Path to your GeoJSON file
+    });
+
+    map.addLayer({
+      'id': 'cities-layer',
+      'type': 'circle',
+      'source': 'cities',
+      'paint': {
+        'circle-radius': 6,
+        'circle-color': '#FF6347'
+      }
+    });
+
+    // Add the polygons layer (regions)
+    map.addSource('regions', {
+      'type': 'geojson',
+      'data': 'regions.geojson'  // Path to your GeoJSON file
+    });
+
+    map.addLayer({
+      'id': 'regions-layer',
+      'type': 'fill',
+      'source': 'regions',
+      'paint': {
+        'fill-color': '#4682B4',
+        'fill-opacity': 0.6
+      }
+    });
+
+    // Add layer toggle control
+    const toggleCitiesButton = document.createElement('button');
+    toggleCitiesButton.textContent = 'Toggle Cities';
+    toggleCitiesButton.onclick = () => {
+      const visibility = map.getLayoutProperty('cities-layer', 'visibility');
+      if (visibility === 'visible') {
+        map.setLayoutProperty('cities-layer', 'visibility', 'none');
+      } else {
+        map.setLayoutProperty('cities-layer', 'visibility', 'visible');
+      }
+    };
+
+    const toggleRegionsButton = document.createElement('button');
+    toggleRegionsButton.textContent = 'Toggle Regions';
+    toggleRegionsButton.onclick = () => {
+      const visibility = map.getLayoutProperty('regions-layer', 'visibility');
+      if (visibility === 'visible') {
+        map.setLayoutProperty('regions-layer', 'visibility', 'none');
+      } else {
+        map.setLayoutProperty('regions-layer', 'visibility', 'visible');
+      }
+    };
+
+    document.body.appendChild(toggleCitiesButton);
+    document.body.appendChild(toggleRegionsButton);
+  });
+</script>

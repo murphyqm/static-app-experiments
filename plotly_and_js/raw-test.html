@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plotly Map with Toggle Layers</title>
+    <style>
+        /* CSS styling for the map and button */
+        #map-container {
+            width: 100%;
+            height: 500px;
+        }
+        #toggleLayerButton {
+            margin: 20px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="toggleLayerButton">Hide Layer</div>
+    <div id="map-container"></div>
+
+    <!-- Embed Plotly map HTML -->
+    <div id="plotly-map">
+        <iframe src="map.html" width="100%" height="500px"></iframe>
+    </div>
+
+    <!-- JavaScript for layer toggle -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleBtn = document.getElementById('toggleLayerButton');
+            const mapContainer = document.getElementById('map-container');
+
+            let layerVisible = true;
+
+            toggleBtn.addEventListener('click', function () {
+                if (layerVisible) {
+                    // Hide the layer
+                    mapContainer.layout.mapbox.layers[0].visible = false;
+                    toggleBtn.textContent = "Show Layer";
+                } else {
+                    // Show the layer
+                    mapContainer.layout.mapbox.layers[0].visible = true;
+                    toggleBtn.textContent = "Hide Layer";
+                }
+                layerVisible = !layerVisible;
+            });
+        });
+    </script>
+</body>
+</html>

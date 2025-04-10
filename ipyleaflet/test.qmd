@@ -1,0 +1,58 @@
+---
+title: "Basic ipyleaflet map"
+format: html
+execute:
+  echo: true
+  eval: true
+---
+
+
+```{python}
+import ipyleaflet
+from ipyleaflet import Map, basemaps, TileLayer
+import ipywidgets as widgets
+from IPython.display import display
+
+# Define the map
+m = Map(center=(51.5074, -0.1278), zoom=10)  # Centered on London
+
+# Create the layers
+streets_layer = TileLayer(url=basemaps.OpenStreetMap.Mapnik['url'])
+satellite_layer = TileLayer(url=basemaps.Esri.WorldImagery['url'])
+terrain_layer = TileLayer(url=basemaps.Esri.WorldTerrain['url'])
+
+# Create checkboxes to toggle layers
+checkbox_streets = widgets.Checkbox(value=True, description='Streets')
+checkbox_satellite = widgets.Checkbox(value=False, description='Satellite')
+checkbox_terrain = widgets.Checkbox(value=True, description='Terrain')
+
+# Function to update layers based on checkbox states
+def update_map(change):
+    # Clear all layers
+    m.layers = []  # Remove all layers before adding the selected ones
+    
+    # Add layers based on checkbox values
+    if checkbox_streets.value:
+        m.add_layer(streets_layer)
+    if checkbox_satellite.value:
+        m.add_layer(satellite_layer)
+    if checkbox_terrain.value:
+        m.add_layer(terrain_layer)
+
+# Link the checkboxes to the update function
+checkbox_streets.observe(update_map, names='value')
+checkbox_satellite.observe(update_map, names='value')
+checkbox_terrain.observe(update_map, names='value')
+
+# Initially update the map layers when the page first loads
+update_map(None)
+
+# Create a VBox container to hold both the widgets (checkboxes) and the map
+widgets_box = widgets.VBox([checkbox_streets, checkbox_satellite, checkbox_terrain])
+
+# Display the widgets (checkboxes) and the map interactively
+display(widgets_box)  # Display the checkboxes
+display(m)  # Display the map
+
+```
+

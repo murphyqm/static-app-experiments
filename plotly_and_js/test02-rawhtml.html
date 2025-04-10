@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plotly Map with Toggleable Layers</title>
+    <style>
+        /* Style for the map container */
+        #map-container {
+            width: 100%;
+            height: 500px;
+        }
+
+        /* Style for the toggle button */
+        #toggleLayerButton {
+            margin: 20px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Interactive Map with Toggleable Layers</h1>
+    <div id="toggleLayerButton">Hide Layer</div>
+    <div id="map-container"></div>
+
+    <!-- Include Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <script>
+        // Create the map layout and layers in JavaScript
+        var trace1 = {
+            type: 'scattermapbox',
+            lat: [40.7128, 34.0522],  // New York and Los Angeles
+            lon: [-74.0060, -118.2437],
+            mode: 'markers',
+            marker: { size: 14, color: 'red' },
+            name: "Cities"
+        };
+
+        var data = [trace1];
+
+        var layout = {
+            mapbox: {
+                style: "open-street-map",
+                center: { lat: 39.8283, lon: -98.5795 },  // Center of US
+                zoom: 3
+            },
+            title: "Interactive Map with Toggleable Layers"
+        };
+
+        // Plot the map
+        Plotly.newPlot('map-container', data, layout);
+
+        // Toggle functionality for the layer
+        let layerVisible = true;
+        const toggleBtn = document.getElementById('toggleLayerButton');
+        toggleBtn.addEventListener('click', function () {
+            // Use Plotly.update to change visibility
+            Plotly.update('map-container', {
+                'visible': layerVisible ? false : true
+            });
+
+            // Toggle button text based on visibility state
+            toggleBtn.textContent = layerVisible ? "Show Layer" : "Hide Layer";
+
+            // Toggle the visibility state
+            layerVisible = !layerVisible;
+        });
+    </script>
+
+</body>
+</html>

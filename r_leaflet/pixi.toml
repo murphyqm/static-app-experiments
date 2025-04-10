@@ -1,0 +1,15 @@
+[project]
+authors = ["Maeve Murphy Quinlan <earmmu@leeds.ac.uk>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "static-app-experiments"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+r = ">=4.4,<4.5"
+r-leaflet = ">=2.2.2,<2.3"
+r-geojsonio = ">=0.11.3,<0.12"
+r-htmltools = ">=0.5.8.1,<0.6"

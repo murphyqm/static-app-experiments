@@ -1,0 +1,15 @@
+[project]
+authors = ["Maeve Murphy Quinlan <earmmu@leeds.ac.uk>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "plotly_and_js"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+python = ">=3.13.2,<3.14"
+numpy = ">=2.2.4,<2.3"
+plotly = ">=6.0.1,<6.1"
+jupyter = ">=1.1.1,<1.2"
