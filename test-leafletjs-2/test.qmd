@@ -28,8 +28,10 @@ This means that any styling options available in Quarto (e.g. general website st
     </fieldset>      
 </div>
 <button id="toggleSidebar">☰ Filters</button>
+<a href="map_fullscreen.html" target="_blank" id="fullscreenBtn">🗖 View Fullscreen</a>
 <div id="map"></div>                       
 </div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="script.js"></script>
+

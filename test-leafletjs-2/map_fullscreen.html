@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Fullscreen Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css"> <!-- Optional -->
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    #map {
+      height: calc(100vh - 50px) !important; 
+      margin-top: 50px !important;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+    
+    <div id="map-header">
+        <div id="fullscreen-header-left">
+        <div id="map-title">🗺️ Map Viewer</div>
+        <a href="test.html" id="back-to-app">← Return to App</a>
+    </div>
+      </div>
+      <div id="fullscreen-map-wrapper"></div>
+    <div id="controls">
+        <label for="regionFilter">Filter by Region:</label>
+        <select id="regionFilter">
+          <option value="">All</option>
+        </select>
+        
+        <fieldset>
+            <legend><strong>Layer Type</strong></legend>
+            <label><input type="radio" name="layerType" value="counties" checked> Counties</label>
+            <label><input type="radio" name="layerType" value="schools"> Schools</label>
+            <label><input type="radio" name="layerType" value="clinics"> Clinics</label>
+            <label><input type="radio" name="layerType" value="all"> All Layers</label>
+          </fieldset>      
+      </div>
+      <button id="toggleSidebar">☰ Filters</button>
+      <div id="map"></div>    
+    </div>                   
+    
+      <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <script src="script.js"></script>
+</body>
+</html>
