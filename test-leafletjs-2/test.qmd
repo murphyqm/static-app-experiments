@@ -1,0 +1,35 @@
+---
+title: "Basic example dashboard"
+format:
+    html:
+        css: style.css
+---
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+This dashboard example uses leaflet js (directly, as opposed to via python). I initially built this all
+using HTML, but to mak it a bit more user friendly, I've now embedded it in a Quarto document.
+
+This means that any styling options available in Quarto (e.g. general website styling) is available here too.
+
+<div id="map-wrapper" style="position: relative;">
+<div id="controls">
+<label for="regionFilter">Filter by Region:</label>
+<select id="regionFilter">
+    <option value="">All</option>
+</select>
+
+<fieldset>
+    <legend><strong>Layer Type</strong></legend>
+    <label><input type="radio" name="layerType" value="counties" checked> Counties</label>
+    <label><input type="radio" name="layerType" value="schools"> Schools</label>
+    <label><input type="radio" name="layerType" value="clinics"> Clinics</label>
+    <label><input type="radio" name="layerType" value="all"> All Layers</label>
+    </fieldset>      
+</div>
+<button id="toggleSidebar">☰ Filters</button>
+<div id="map"></div>                       
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="script.js"></script>

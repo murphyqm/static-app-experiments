@@ -1,0 +1,28 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "location_id": "alpha",
+          "school_name": "Alpha High"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-100.5, 40.5]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "location_id": "beta",
+          "school_name": "Beta Elementary"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-98.5, 38.5]
+        }
+      }
+    ]
+  }
+  

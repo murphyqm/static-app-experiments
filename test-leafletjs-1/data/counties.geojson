@@ -1,0 +1,40 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "location_id": "alpha",
+          "name": "Sample Area 1"
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [-100.0, 40.0],
+            [-101.0, 40.0],
+            [-101.0, 41.0],
+            [-100.0, 41.0],
+            [-100.0, 40.0]
+          ]]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "location_id": "beta",
+          "name": "Sample Area 2"
+        },
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [[
+            [-98.0, 38.0],
+            [-99.0, 38.0],
+            [-99.0, 39.0],
+            [-98.0, 39.0],
+            [-98.0, 38.0]
+          ]]
+        }
+      }
+    ]
+  }
+  

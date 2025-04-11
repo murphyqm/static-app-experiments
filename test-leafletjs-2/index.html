@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Multi-layer Map with Filters</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="controls">
+    <label for="regionFilter">Filter by Region:</label>
+    <select id="regionFilter">
+      <option value="">All</option>
+    </select>
+    
+    <fieldset>
+        <legend><strong>Layer Type</strong></legend>
+        <label><input type="radio" name="layerType" value="counties" checked> Counties</label>
+        <label><input type="radio" name="layerType" value="schools"> Schools</label>
+        <label><input type="radio" name="layerType" value="clinics"> Clinics</label>
+        <label><input type="radio" name="layerType" value="all"> All Layers</label>
+      </fieldset>      
+  </div>
+  <button id="toggleSidebar">☰ Filters</button>
+  <div id="map"></div>                       
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+   <!-- Link to external JavaScript file -->
+  <script src="script.js"></script>
+</body>
+</html>

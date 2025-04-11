@@ -1,0 +1,13 @@
+name: voici
+channels:
+  - conda-forge
+dependencies:
+  - mamba==2.0.1
+  - micromamba
+  - xeus-python
+  - pandas
+  - bqplot
+  - ipycanvas
+  - ipywidgets
+  - pip:
+    - jupyterlite-xeus==0.2.0a0

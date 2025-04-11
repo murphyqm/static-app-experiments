@@ -1,0 +1,28 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "properties": {
+          "location_id": "alpha",
+          "clinic_name": "Alpha Health Center"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-100.3, 40.6]
+        }
+      },
+      {
+        "type": "Feature",
+        "properties": {
+          "location_id": "beta",
+          "clinic_name": "Beta Clinic"
+        },
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-98.3, 38.6]
+        }
+      }
+    ]
+  }
+  

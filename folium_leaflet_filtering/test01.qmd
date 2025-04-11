@@ -1,0 +1,137 @@
+---
+title: "Basic example dashboard"
+---
+
+This is a very simple prototype dashboard. Mouse around the map below, and use the layers menu (top right hand corner of the map)
+to view different map layers and resources, which can be toggled.
+
+
+```{python}
+#| echo: false
+
+import folium
+import itables
+import geopandas as gpd
+import ipywidgets
+from IPython.display import display, HTML
+from folium.plugins import HeatMap
+from folium.plugins import MarkerCluster, FastMarkerCluster
+import matplotlib.pyplot as plt
+import numpy as np
+import branca.colormap as cm
+
+z_min = 1
+z_max = 10
+cmap = cm.linear.plasma
+
+# Create a map centered around Ireland
+map_ireland = folium.Map(location=[53.8008, -1.5491], zoom_start=13, tiles=None)  # Leeds
+folium.TileLayer('cartodbpositron', name='Minimal', control=False).add_to(map_ireland)
+
+"""
+# don't need heatmap in this example
+gradient_dict = {}
+
+# Get the index values and colors from the plasma colormap
+for ind_val, c in zip(cmap.index, cmap.colors):
+    r, g, b, a = c
+    gradient_dict[str(ind_val)] = f"rgba({r * 255},{g * 255},{b * 255},{a})"  # RGBA to 255 scale
+"""
+
+geojson_file = 'https://raw.githubusercontent.com/FrancescaPontin/Park_Safety/refs/heads/main/data/uk_park_run.geojson'
+
+gdf = gpd.read_file(geojson_file)
+
+"""
+# useful if you want to select a specific column
+w = ipywidgets.Dropdown(
+    options=gdf.columns.values.tolist(),
+    value=gdf.columns.values[15],
+    description='Column:',
+    disabled=False,
+)
+"""
+
+w = ipywidgets.Dropdown(
+    options=gdf["TYPE"].unique(),
+    value=gdf["TYPE"].unique()[0],
+    description='Type:',
+    disabled=False,
+)
+
+
+display(w)
+
+"""
+# don't need heatmap in this example
+heatmap_layer = gdf[["latitude","longitude"]].copy()
+HeatMap(heatmap_layer,
+        name = 'Parkrun heatmap',
+        gradient=gradient_dict,).add_to(map_ireland)
+
+print(gradient_dict)
+"""
+
+marker_cluster = MarkerCluster(name = 'Parkrun events').add_to(map_ireland)
+
+# Iterate over your GeoDataFrame (or data) to add markers to the cluster
+for idx, row in gdf.iterrows():
+    # Get coordinates for the marker
+    lat, lon = row["latitude"], row["longitude"]
+    
+    
+    """
+    # Create the CircleMarker with the selected color and add the tooltip/popup
+    folium.CircleMarker(
+        location=[lat, lon],
+        radius=10,  # radius in pixels, not meters
+        popup=f"{row['EventLongName']}<br>Country: {row['countrycode']}",
+    ).add_to(marker_cluster)
+    """
+    marker = folium.Marker(
+        location=[lat, lon],
+        icon=folium.Icon(color="darkpurple"),
+        popup=f"{row['Event']}</br></br>Years: {row["Anniversary Number"]}</br></br>Type: {row["TYPE"]}",
+    )
+    marker.add_to(marker_cluster)
+    
+
+folium.Element("""
+        <style>
+            .marker-cluster-small {
+                background-color: rgba(247,104,161, 0.5) !important;
+            }
+            .marker-cluster-small div {
+                background-color: rgba(247,104,161, 0.9) !important;
+            }
+            .marker-cluster-medium {
+                background-color: rgba(197,27,138, 0.5) !important;
+            }
+            .marker-cluster-medium div {
+                background-color: rgba(197,27,138, 0.9) !important;
+            }
+            .marker-cluster-large {
+                background-color: rgba(122,1,119, 0.5) !important;
+            }
+            .marker-cluster-large div {
+                background-color: rgba(122,1,119, 0.9) !important;
+            }
+        </style>
+    """).add_to(map_ireland._parent.header)
+
+# Add Layer Control to toggle between layers
+folium.LayerControl().add_to(map_ireland)
+
+def update_map(type):
+    filtered_data = gdf[gdf["TYPE"] == type]
+    map_ireland.geojson.data = filtered_data
+
+w.observe(lambda change: update_map(change.new), names='value')
+
+display(map_ireland)
+
+```
+
+```{python}
+itables.show(gdf)
+```
